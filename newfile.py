@@ -5,23 +5,33 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return """
-    <body style='background-color: #121212; color: white; text-align: center; font-family: Arial, sans-serif; padding: 20px;'>
-        <div style='border: 2px solid #00ffcc; padding: 20px; border-radius: 15px; display: inline-block; max-width: 500px;'>
-            <h1 style='color: #00ffcc;'>JOB OPPORTUNITY!</h1>
-            <h2 style='color: #ffcc00;'>Position: Graphic Designer</h2>
-            <p style='font-size: 18px;'>We are looking for a creative designer to join Daniel's team.</p>
-            
-            <div style='text-align: left; display: inline-block; margin-top: 10px;'>
-                <p>✅ <b>Requirements:</b> Proficiency in Photoshop & Illustrator</p>
-                <p>✅ <b>Experience:</b> 1+ Year</p>
-                <p>✅ <b>Salary:</b> Negotiable</p>
-            </div>
-            
-            <hr style='border: 0.5px solid #444; margin: 20px 0;'>
-            <p>Interested? Send your CV to:</p>
-            <a href='mailto:mulugetadaniel74@gmail.com' style='background-color: #00ffcc; color: black; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>APPLY NOW</a>
-            <p style='margin-top: 20px; font-size: 12px; color: #888;'>Posted on Daniel Mulugeta's Official Website</p>
+    <body style='background-color: #f4f4f4; color: #333; text-align: center; font-family: Arial, sans-serif; margin: 0; padding: 0;'>
+        <div style='background-color: #004d40; color: white; padding: 20px;'>
+            <h1 style='margin: 0;'>🏨 Daniel's Luxury Hotel & Hospital</h1>
+            <p>Quality Care & Comfort in One Place</p>
         </div>
+
+        <div style='display: flex; justify-content: center; gap: 20px; padding: 30px; flex-wrap: wrap;'>
+            
+            <div style='background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 300px; padding: 20px;'>
+                <img src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' style='width: 100%; border-radius: 5px;'>
+                <h3>Luxury Hotel</h3>
+                <p>Enjoy world-class comfort and 5-star services.</p>
+                <button style='background: #004d40; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px;'>Book a Room</button>
+            </div>
+
+            <div style='background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 300px; padding: 20px;'>
+                <img src='https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400' style='width: 100%; border-radius: 5px;'>
+                <h3>Modern Hospital</h3>
+                <p>24/7 Professional medical care for your family.</p>
+                <button style='background: #d32f2f; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px;'>Contact Doctor</button>
+            </div>
+
+        </div>
+
+        <footer style='background: #333; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%;'>
+            <p>Contact: +251 9XX XXX XXX | Email: info@daniel.com</p>
+        </footer>
     </body>
     """
 
