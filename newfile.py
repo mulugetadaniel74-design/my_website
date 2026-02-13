@@ -1,11 +1,13 @@
-from flask import Flask, request
+from flask import Flask
 
 app = Flask(__name__)
 
 # ምስሎች (Images)
 my_photo = "https://github.com/mulugetadaniel74-design/my_website/blob/main/IMG_20250316_160655_800.jpg?raw=true"
-room_vip = "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
-food_kitfo = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800"
+room1 = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"
+room2 = "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
+food1 = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800"
+hotel_view = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800"
 
 def layout(content, title="Daniel's Hotel"):
     return f"""
@@ -14,32 +16,31 @@ def layout(content, title="Daniel's Hotel"):
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            body {{ margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; color: #333; }}
+            body {{ margin:0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; color: #333; }}
             .header {{ background: #004d40; color: white; padding: 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }}
-            nav a {{ color:white; margin:0 15px; text-decoration:none; font-weight:bold; font-size: 14px; transition: 0.3s; }}
-            nav a:hover {{ color: #ffcc00; }}
-            .card {{ background:white; max-width:500px; margin: 20px auto; border-radius:15px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); }}
-            .btn {{ background:#ffcc00; color:black; padding:12px 30px; text-decoration:none; border-radius:25px; font-weight:bold; display: inline-block; transition: 0.3s; }}
-            .btn:hover {{ background: #e6b800; transform: scale(1.05); }}
-            input, select {{ width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px; box-sizing: border-box; }}
-            footer {{ background: #263238; color: white; padding: 30px; margin-top: 40px; font-size: 14px; }}
+            nav a {{ color:white; margin:0 10px; text-decoration:none; font-weight:bold; font-size: 13px; }}
+            .card {{ background:white; max-width:600px; margin: 20px auto; border-radius:15px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); }}
+            .btn {{ background:#ffcc00; color:black; padding:12px 25px; text-decoration:none; border-radius:25px; font-weight:bold; display: inline-block; }}
+            .gallery-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }}
+            .gallery-grid img {{ width: 100%; border-radius: 10px; height: 150px; object-fit: cover; }}
+            footer {{ background: #263238; color: white; padding: 30px; margin-top: 40px; }}
         </style>
     </head>
     <body>
         <div class="header">
             <h2 style='margin:0;'>🏨 {title}</h2>
-            <nav style='margin-top:12px;'>
-                <a href='/'>HOME</a>
-                <a href='/rooms'>ROOMS</a>
-                <a href='/menu'>MENU</a>
-                <a href='/register' style='color:#ffcc00;'>REGISTER</a>
+            <nav style='margin-top:10px;'>
+                <a href='/'>HOME</a> | <a href='/rooms'>ROOMS</a> | <a href='/gallery'>GALLERY</a> | <a href='/register' style='color:#ffcc00;'>REGISTER</a>
             </nav>
         </div>
         {content}
         <footer>
-            <p>📍 Addis Ababa, Ethiopia</p>
+            <h3>አድራሻችን</h3>
+            <p>📍 አዲስ አበባ፣ ኢትዮጵያ (Addis Ababa, Ethiopia)</p>
             <p>📞 0986980130 | Telegram: @Godis1256</p>
-            <p>© 2026 Daniel Mulugeta ICT Services</p>
+            <div style="margin-top:15px;">
+                <a href="https://www.google.com/maps" style="color:#ffcc00; text-decoration:none;">📍 በካርታ ለማየት እዚህ ይጫኑ</a>
+            </div>
         </footer>
     </body>
     </html>
@@ -48,52 +49,56 @@ def layout(content, title="Daniel's Hotel"):
 @app.route('/')
 def home():
     content = f"""
-    <div style='padding: 60px 20px;'>
-        <img src='{my_photo}' style='width: 160px; height: 160px; border-radius: 50%; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.2); object-fit: cover;'>
-        <h1 style='font-size: 2.5em; margin-top: 20px;'>Daniel's Grand Hotel</h1>
-        <p style='font-size: 1.1em; color: #666;'>የተሟላ ምቾት እና ዘመናዊ አገልግሎት በአንድ ላይ</p>
-        <div style='margin-top: 30px;'>
-            <a href='/register' class="btn">አሁኑኑ ይመዝገቡ</a>
-        </div>
+    <div style='padding: 50px 20px;'>
+        <img src='{my_photo}' style='width: 150px; height: 150px; border-radius: 50%; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);'>
+        <h1 style='margin-top:20px;'>Daniel's Grand Hotel</h1>
+        <p>እንኳን ወደ ሆቴላችን በሰላም መጡ! ምርጥ መስተንግዶ ይጠብቅዎታል::</p>
+        <a href='/register' class="btn">አሁኑኑ ቦታ ይያዙ</a>
     </div>
     """
     return layout(content)
 
+@app.route('/gallery')
+def gallery():
+    content = f"""
+    <div style='padding: 20px;'>
+        <h2>የፎቶ ማሳያ (Gallery)</h2>
+        <div class="gallery-grid">
+            <img src="{hotel_view}">
+            <img src="{room1}">
+            <img src="{room2}">
+            <img src="{food1}">
+        </div>
+        <p>የሆቴላችንን ውበት በፎቶ ይመልከቱ</p>
+    </div>
+    """
+    return layout(content, "Hotel Gallery")
+
 @app.route('/rooms')
 def rooms():
-    content = f"""<div style='padding:20px;'><h2>አሪፍ ክፍሎቻችን</h2><div class="card"><img src='{room_vip}' style='width:100%;'><div style='padding:20px;'><h3>VIP Suite</h3><p>Price: $200 / Night</p><a href='/register' class="btn">BOOK NOW</a></div></div></div>"""
-    return layout(content, "Hotel Rooms")
-
-@app.route('/menu')
-def menu():
-    content = f"""<div style='padding:20px;'><h2>ምርጥ ምግቦቻችን</h2><div class="card"><img src='{food_kitfo}' style='width:100%;'><div style='padding:20px;'><h3>Traditional Kitfo</h3><p>ትኩስ እና ጣፋጭ ክትፎ</p></div></div></div>"""
-    return layout(content, "Restaurant Menu")
+    content = f"""<div style='padding:20px;'><h2>ክፍሎቻችን</h2><div class="card"><img src='{room1}' style='width:100%;'><div style='padding:20px;'><h3>VIP Room</h3><p>$200 / Night</p><a href='/register' class="btn">BOOK</a></div></div></div>"""
+    return layout(content, "Rooms")
 
 @app.route('/register')
 def register():
-    content = f"""
-    <div style='padding: 30px 20px;'>
+    content = """
+    <div style='padding: 20px;'>
         <div class="card" style='padding:30px; text-align:left;'>
-            <h2 style='text-align:center; margin-top:0;'>የእንግዳ ምዝገባ</h2>
+            <h2 style='text-align:center;'>ይመዝገቡ</h2>
             <form action="https://formspree.io/f/xlgwjnee" method="POST">
-                <label>ሙሉ ስም</label>
-                <input type='text' name='name' placeholder="ለምሳሌ፡ ዳንኤል ሙሉጌታ" required>
-                <label>ስልክ ቁጥር</label>
-                <input type='tel' name='phone' placeholder="09..." required>
-                <label>የሚፈልጉት አገልግሎት</label>
-                <select name='service'>
-                    <option>ክፍል ማስያዝ (Room Booking)</option>
-                    <option>ምግብ ማዘዝ (Food Order)</option>
-                    <option>ሌላ (Other)</option>
+                <input type='text' name='name' placeholder="ሙሉ ስም" style='width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;' required>
+                <input type='tel' name='phone' placeholder="ስልክ ቁጥር" style='width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;' required>
+                <select name='service' style='width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;'>
+                    <option>ክፍል ማስያዝ</option>
+                    <option>ምግብ ማዘዝ</option>
                 </select>
                 <input type="hidden" name="_next" value="https://daniel-zt06.onrender.com/">
-                <button type='submit' class="btn" style='width:100%; border:none; cursor:pointer; margin-top:10px;'>መረጃውን ላክ</button>
+                <button type='submit' class="btn" style='width:100%; border:none; cursor:pointer;'>መረጃውን ላክ</button>
             </form>
         </div>
     </div>
     """
-    return layout(content, "Register Now")
+    return layout(content, "Register")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-    
