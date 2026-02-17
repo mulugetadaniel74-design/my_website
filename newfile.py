@@ -1,71 +1,76 @@
-
 from flask import Flask
+import datetime
 
 app = Flask(__name__)
 
-# ምርጥ ምስሎች
+# ምስሎች
 my_photo = "https://github.com/mulugetadaniel74-design/my_website/blob/main/IMG_20250316_160655_800.jpg?raw=true"
 hotel_view = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200"
-room_img = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"
-food_img = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800"
 
-def layout(content, title="Daniel Luxury Hotel"):
+def layout(content, title="Daniel Supreme"):
     return f"""
     <!DOCTYPE html>
     <html lang="am">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{title}</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
-            :root {{ --gold: #ffcc00; --dark-green: #004d40; --light-bg: #f8f9fa; }}
-            body {{ margin:0; font-family: 'Poppins', sans-serif; background: var(--light-bg); color: #333; overflow-x: hidden; }}
+            :root {{ --gold: #d4af37; --deep: #002d26; --glass: rgba(255, 255, 255, 0.1); }}
+            body {{ margin:0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; scroll-behavior: smooth; }}
             
-            /* Navbar Style */
-            .header {{ background: var(--dark-green); padding: 10px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }}
-            nav {{ display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 5px; }}
-            nav a {{ color: white; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 15px; border-radius: 50px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }}
-            nav a:hover {{ background: var(--gold); color: black; border-color: var(--gold); }}
-            .active {{ background: var(--gold); color: black; border-color: var(--gold); }}
+            /* 1. Header & Nav */
+            .header {{ background: var(--deep); color: white; padding: 10px; position: sticky; top:0; z-index:2000; }}
+            nav {{ display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }}
+            nav a {{ color: white; text-decoration: none; font-size: 12px; border: 1px solid var(--gold); padding: 5px 12px; border-radius: 20px; }}
+            
+            /* 2. Hero & Profile */
+            .hero {{ width: 100%; height: 350px; object-fit: cover; clip-path: ellipse(100% 70% at 50% 30%); }}
+            .p-img {{ width: 130px; height: 130px; border-radius: 50%; border: 5px solid white; position: absolute; top: 250px; left: 50%; transform: translateX(-50%); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }}
 
-            /* Hero Section */
-            .hero-container {{ position: relative; width: 100%; height: 300px; }}
-            .hero-img {{ width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }}
-            .profile-wrapper {{ position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); }}
-            .profile-img {{ width: 120px; height: 120px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }}
+            /* 3. Modern Cards */
+            .card {{ background: white; max-width: 600px; margin: 100px auto 20px; border-radius: 30px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; }}
+            .btn-lux {{ background: linear-gradient(90deg, #d4af37, #f4c430); color: black; padding: 15px 40px; border-radius: 50px; font-weight: bold; text-decoration: none; display: inline-block; box-shadow: 0 10px 20px rgba(212,175,55,0.3); }}
 
-            /* Cards */
-            .card {{ background: white; max-width: 550px; margin: 80px auto 20px; border-radius: 25px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }}
-            .btn-gold {{ background: linear-gradient(135deg, #ffcc00, #ff9900); color: black; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; box-shadow: 0 5px 15px rgba(255,204,0,0.3); transition: 0.3s; border: none; }}
-            .btn-gold:hover {{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255,204,0,0.4); }}
+            /* 4. Comparison Table */
+            .price-table {{ width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }}
+            .price-table th, .price-table td {{ border: 1px solid #eee; padding: 12px; }}
+            .price-table th {{ background: #f9f9f9; }}
 
-            /* Footer */
-            footer {{ background: #111; color: #999; padding: 40px 20px; text-align: center; margin-top: 60px; }}
-            .footer-card {{ background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; display: inline-block; text-align: left; color: white; }}
+            /* 5. Floating Socials */
+            .social-bar {{ position: fixed; left: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 3000; }}
+            .social-bar a {{ background: var(--deep); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; }}
+
+            /* 6. TikTok Box */
+            .tiktok-box {{ background: #000; color: white; padding: 20px; border-radius: 20px; margin: 20px auto; max-width: 500px; }}
         </style>
     </head>
-    <body class="animate__animated animate__fadeIn">
+    <body>
+        <div class="social-bar">
+            <a href="https://t.me/Godis1256"><i class="fab fa-telegram"></i></a>
+            <a href="https://www.tiktok.com/@musicstudio438"><i class="fab fa-tiktok"></i></a>
+            <a href="tel:0986980130"><i class="fas fa-phone"></i></a>
+        </div>
+
         <div class="header">
-            <h2 style="color:white; margin:0 0 10px 0; text-align:center;">🏨 DANIEL LUXURY</h2>
+            <h3>🏨 DANIEL SUPREME HOTEL</h3>
             <nav>
-                <a href="/" id="h-link">HOME</a>
-                <a href="/rooms" id="r-link">ROOMS</a>
-                <a href="/menu" id="m-link">MENU</a>
-                <a href="/gallery" id="g-link">GALLERY</a>
-                <a href="/register" style="background:white; color:black;">BOOK NOW</a>
+                <a href="/">HOME</a>
+                <a href="/rooms">ROOMS</a>
+                <a href="/menu">MENU</a>
+                <a href="/gallery">GALLERY</a>
+                <a href="/register">BOOK</a>
             </nav>
         </div>
 
         {content}
 
         <footer>
-            <div class="footer-card">
-                <h4 style="margin:0 0 10px 0; color:var(--gold);">💰 Payment Methods</h4>
-                <p style="margin:5px 0;">Telebirr: 0986980130</p>
-                <p style="margin:5px 0;">Abyssinia: 153682704</p>
+            <div class="card" style="background:#111; color:white; margin: 50px auto 0;">
+                <h4 style="color:var(--gold);">💰 Payment Info</h4>
+                <p>Telebirr: 0986980130 | Bank: 153682704</p>
+                <p style="font-size: 10px;">Designed & Developed by Daniel Mulugeta (ICT Specialist)</p>
             </div>
-            <p style="margin-top:20px; font-size:12px;">© 2026 Daniel Mulugeta ICT Specialist</p>
         </footer>
     </body>
     </html>
@@ -74,82 +79,65 @@ def layout(content, title="Daniel Luxury Hotel"):
 @app.route('/')
 def home():
     content = f"""
-    <div class="hero-container">
-        <img src="{hotel_view}" class="hero-img">
-        <div class="profile-wrapper">
-            <img src="{my_photo}" class="profile-img">
-        </div>
+    <div style="position:relative;">
+        <img src="{hotel_view}" class="hero">
+        <img src="{my_photo}" class="p-img">
     </div>
-    <div class="card animate__animated animate__fadeInUp">
-        <h1 style="margin-bottom:5px;">Daniel's Grand Hotel</h1>
-        <p style="color:var(--gold); font-size:20px;">★★★★★</p>
-        <p style="color:#666; line-height:1.6;">Welcome to the pinnacle of Ethiopian hospitality. Experience luxury, comfort, and world-class service in the heart of the city.</p>
-        <a href="/register" class="btn-gold">Explore & Book</a>
+    <div class="card">
+        <h1>Welcome to Daniel's Hub</h1>
+        <p>የኢትዮጵያ ቀዳሚው ዘመናዊ ሆቴል::</p>
+        <div style="display:flex; justify-content:center; gap:20px; font-size:25px; color:var(--deep); margin:20px;">
+            <i class="fas fa-wifi"></i> <i class="fas fa-swimmer"></i> <i class="fas fa-utensils"></i> <i class="fas fa-spa"></i>
+        </div>
+        
+        <h3>🏨 የክፍሎች ዋጋ ዝርዝር</h3>
+        <table class="price-table">
+            <tr><th>Room Type</th><th>Price</th><th>Extra</th></tr>
+            <tr><td>Standard</td><td>2,500 ETB</td><td>Free WiFi</td></tr>
+            <tr><td>VIP Suite</td><td>5,000 ETB</td><td>Breakfast</td></tr>
+            <tr><td>Presidential</td><td>10,000 ETB</td><td>Pool Access</td></tr>
+        </table>
+        <br>
+        <a href="/register" class="btn-lux">Book Your Room Now</a>
+    </div>
+
+    <div class="tiktok-box">
+        <h4>📱 Latest TikTok Updates</h4>
+        <p>Follow @musicstudio438 for more!</p>
+        <a href="https://www.tiktok.com/@musicstudio438" style="color:var(--gold);">Watch Videos</a>
     </div>
     """
     return layout(content)
 
 @app.route('/rooms')
 def rooms():
-    content = f"""
-    <div class="card animate__animated animate__zoomIn">
-        <h2 style="color:var(--dark-green);">Luxury Suites</h2>
-        <img src="{room_img}" style="width:100%; border-radius:20px; margin:15px 0;">
-        <h3>VIP Presidential Suite</h3>
-        <p style="color:#777;">High-speed WiFi, Mini Bar, and City View.</p>
-        <p style="font-weight:bold; font-size:22px;">5,000 ETB / Night</p>
-        <a href="/register" class="btn-gold">Reserve Now</a>
-    </div>
-    """
-    return layout(content, "Luxury Rooms")
+    return layout("<div class='card'><h2>Rooms - Coming Soon with 360 View!</h2></div>")
 
 @app.route('/menu')
 def menu():
-    content = f"""
-    <div class="card animate__animated animate__fadeInRight">
-        <h2 style="color:var(--dark-green);">Exquisite Dining</h2>
-        <img src="{food_img}" style="width:100%; border-radius:20px; margin:15px 0;">
-        <div style="text-align:left; background:#f9f9f9; padding:20px; border-radius:15px;">
-            <p>🥘 Special Kitfo ............ 600 ETB</p>
-            <p>🥩 Lamb Tibs ............. 500 ETB</p>
-            <p>🍕 Gourmet Pizza .......... 450 ETB</p>
-        </div>
-        <a href="tel:0986980130" class="btn-gold" style="margin-top:20px;">Order Delivery</a>
-    </div>
-    """
-    return layout(content, "Food & Drinks")
+    return layout("<div class='card'><h2>Menu - Order Fresh Foods Online!</h2></div>")
 
 @app.route('/gallery')
 def gallery():
-    content = f"""
-    <div class="card animate__animated animate__fadeInUp" style="max-width:800px;">
-        <h2 style="color:var(--dark-green);">Hotel Gallery</h2>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; padding:10px;">
-            <img src="{hotel_view}" style="width:100%; border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.1);">
-            <img src="{room_img}" style="width:100%; border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.1);">
-            <img src="{food_img}" style="width:100%; border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.1);">
-            <img src="{my_photo}" style="width:100%; border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.1);">
-        </div>
-    </div>
-    """
-    return layout(content, "Gallery")
+    return layout("<div class='card'><h2>Gallery - Beautiful Hotel Views</h2></div>")
 
 @app.route('/register')
 def register():
     content = """
-    <div class="card animate__animated animate__pulse">
-        <h2 style="color:var(--dark-green);">Guest Registration</h2>
-        <p>Complete the form below to book your stay.</p>
-        <div style="text-align:left;">
-            <label style="font-weight:bold; font-size:14px;">Full Name</label>
-            <input type="text" placeholder="Enter your name" style="width:100%; padding:12px; margin:8px 0 20px; border-radius:10px; border:1px solid #ddd;">
-            <label style="font-weight:bold; font-size:14px;">Phone Number</label>
-            <input type="tel" placeholder="09..." style="width:100%; padding:12px; margin:8px 0 20px; border-radius:10px; border:1px solid #ddd;">
-        </div>
-        <button class="btn-gold" style="width:100%;" onclick="alert('Booking Request Sent!')">Confirm Booking</button>
+    <div class="card">
+        <h2>Quick Reservation</h2>
+        <input type="text" placeholder="Full Name" style="width:90%; padding:15px; margin:10px; border-radius:15px; border:1px solid #ddd;">
+        <input type="number" id="n" placeholder="Nights" oninput="calc()" style="width:90%; padding:15px; margin:10px; border-radius:15px; border:1px solid #ddd;">
+        <p>Total: <b id="total">0</b> ETB</p>
+        <button class="btn-lux" style="width:95%;">Confirm My Stay</button>
+        <script>
+            function calc() {
+                document.getElementById('total').innerText = document.getElementById('n').value * 2500;
+            }
+        </script>
     </div>
     """
-    return layout(content, "Book Your Stay")
+    return layout(content)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
