@@ -1,13 +1,13 @@
 import telebot
 import random
 
-# ያንተ የቦት ቁልፍ
+# የቦትህ ቁልፍ (ከምስል 1000013022.jpg የተወሰደ)
 TOKEN = '8512547452:AAGs1M3bTUVd1rVxfJViuZ7Dbq1Rj4WXbkE'
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def welcome(message):
-    bot.reply_to(message, "ሰላም ዳንኤል! 👋 የኬኖ እና ስፒን ቦትህ ዝግጁ ነው::\nለመጫወት /spin ብለው ይጻፉ::")
+    bot.reply_to(message, "ሰላም ዳንኤል! 👋 የኬኖ እና ስፒን ቦትህ ዝግጁ ነው:: \nለመጫወት /spin ብለው ይጻፉ::")
 
 @bot.message_handler(commands=['spin'])
 def spin_game(message):
