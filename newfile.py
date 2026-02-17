@@ -1,142 +1,120 @@
-
-from flask import Flask
+from flask import Flask, render_template_string
+import datetime
 
 app = Flask(__name__)
 
-# ምስሎች (Image Links)
+# ምስሎች
 my_photo = "https://github.com/mulugetadaniel74-design/my_website/blob/main/IMG_20250316_160655_800.jpg?raw=true"
-room1 = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"
-hotel_view = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800"
+room_vip = "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800"
 
-def layout(content, title="Daniel's Grand Hotel"):
+def layout(content, title="Daniel's Ultimate"):
     return f"""
     <!DOCTYPE html>
     <html lang="am">
     <head>
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
-            :root {{ --bg: #f0f2f5; --text: #333; --card: white; --header: #004d40; }}
-            .dark-mode {{ --bg: #1a1a1a; --text: #f0f0f0; --card: #2d2d2d; --header: #002d26; }}
+            :root {{ --primary: #1a237e; --gold: #ffd700; --white: #ffffff; --dark: #121212; }}
+            body {{ margin:0; font-family: 'Segoe UI', sans-serif; transition: 0.5s; background: #f4f4f4; }}
             
-            body {{ margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; transition: 0.5s; }}
-            .header {{ background: var(--header); color: white; padding: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }}
-            nav a {{ color:white; margin:0 7px; text-decoration:none; font-weight:bold; font-size: 13px; }}
-            .card {{ background: var(--card); max-width:600px; margin: 20px auto; border-radius:20px; padding: 25px; box-shadow:0 10px 30px rgba(0,0,0,0.1); }}
-            .btn {{ background: linear-gradient(45deg, #ffcc00, #ff9900); color:black; padding:15px 30px; text-decoration:none; border-radius:30px; font-weight:bold; display: inline-block; cursor:pointer; border:none; transition: 0.3s; }}
-            .btn:hover {{ transform: scale(1.05); }}
-            .floating-tg {{ position: fixed; bottom: 80px; right: 20px; background: #0088cc; color: white; padding: 15px; border-radius: 50%; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1001; }}
-            .call-btn {{ background: #28a745; color: white; padding: 12px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; position: fixed; bottom: 20px; right: 20px; z-index: 1001; }}
-            footer {{ background: #1a1a1a; color: white; padding: 40px; margin-top: 50px; border-radius: 30px 30px 0 0; }}
-            .stars {{ color: #ffcc00; font-size: 24px; margin: 10px 0; }}
+            /* 1. Preloader */
+            #loader {{ position: fixed; width: 100%; height: 100vh; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; }}
+            .spinner {{ width: 50px; height: 50px; border: 5px solid #ddd; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }}
+            @keyframes spin {{ 0% {{ transform: rotate(0deg); }} 100% {{ transform: rotate(360deg); }} }}
+
+            .header {{ background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }}
+            .card {{ background: white; margin: 20px auto; max-width: 600px; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }}
+            
+            /* 3. Image Zoom */
+            .zoom-img {{ transition: transform .3s; width: 100%; border-radius: 10px; cursor: pointer; }}
+            .zoom-img:hover {{ transform: scale(1.05); }}
+
+            .btn {{ background: var(--gold); border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }}
+            .btn:hover {{ background: #e6c200; box-shadow: 0 5px 10px rgba(0,0,0,0.2); }}
+
+            .footer {{ background: #212121; color: #aaa; padding: 40px 20px; text-align: center; border-radius: 40px 40px 0 0; }}
+            
+            /* Calculator Style */
+            .calc-box {{ background: #e8eaf6; padding: 15px; border-radius: 10px; margin: 15px 0; }}
         </style>
     </head>
-    <body class="">
-        <div style="background: #ffcc00; color: #000; font-weight: bold; padding: 8px;">
-            <marquee>🔥 Daniel ICT: ማንኛውንም አይነት ዌብሳይት በታላቅ ቅናሽ እናሰራለን! በ 0986980130 ይደውሉ 🔥</marquee>
+    <body onload="hideLoader()">
+        <div id="loader"><div class="spinner"></div></div>
+
+        <div class="header animate__animated animate__fadeInDown">
+            <h2>🏨 DANIEL SUPREME</h2>
+            <div style="font-size: 12px;">
+                <span id="date"></span> | <span id="clock"></span>
+            </div>
         </div>
 
-        <div class="header">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-                <button onclick="toggleMode()" style="background:none; border:1px solid white; color:white; border-radius:15px; cursor:pointer;">🌓 Mode</button>
-                <div id="clock" style="font-size: 14px; letter-spacing: 1px;"></div>
+        <div style="text-align: center; padding: 20px;">
+            <div class="card animate__animated animate__zoomIn">
+                <img src="{my_photo}" class="zoom-img" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--gold);">
+                <h3>እንኳን ደህና መጡ!</h3>
+                <p>የቋንቋ ምርጫ (Language): <button onclick="alert('English is coming soon!')" class="btn" style="padding: 5px 10px; font-size: 10px;">EN</button></p>
             </div>
-            <h2 style='margin:10px 0;'>🏨 {title}</h2>
-            <nav>
-                <a href='/'>HOME</a> | <a href='/rooms'>ROOMS</a> | <a href='/gallery'>GALLERY</a> | <a href='/register' style='color:#ffcc00;'>REGISTER</a>
-            </nav>
-        </div>
-        
-        <a href="https://t.me/Godis1256" class="floating-tg">💬</a>
-        <a href="tel:0986980130" class="call-btn">📞 Call Now</a>
 
-        {content}
-        
-        <footer>
-            <h3>የክፍያ መረጃ (Secure Payment)</h3>
-            <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; text-align:left; display:inline-block;">
-                <p>📱 <b>Telebirr:</b> 0986980130</p>
-                <p>🏦 <b>Bank of Abyssinia:</b> 153682704</p>
-                <p>👤 <b>Account:</b> Daniel Mulugeta</p>
+            <div class="card">
+                <h3>💰 የዋጋ ማስያ (Estimator)</h3>
+                <div class="calc-box">
+                    <label>ስንት ሌሊት ይቆያሉ?</label><br>
+                    <input type="number" id="nights" value="1" oninput="calcPrice()" style="width: 50px; padding: 5px;">
+                    <p>ጠቅላላ ዋጋ: <b><span id="totalPrice">2500</span> ብር</b></p>
+                </div>
             </div>
-            <div style="margin-top:30px;">
-                <p>Follow Us:</p>
-                <a href="https://www.tiktok.com/@musicstudio438" style="color:white; margin:10px;">TikTok</a> | 
-                <a href="https://t.me/Godis1256" style="color:white; margin:10px;">Telegram</a>
+
+            <div class="card animate__animated animate__fadeInUp">
+                <img src="{room_vip}" class="zoom-img">
+                <h3>VIP Presidential Room</h3>
+                <p>ባለ አምስት ኮከብ ምቾት</p>
+                <button class="btn" onclick="shareSite()">🔗 ለጓደኛ ያጋሩ (Share)</button>
             </div>
-            <p style="margin-top:20px; color: #666; font-size: 12px;">Developed by Daniel Mulugeta ICT © 2026</p>
-        </footer>
+        </div>
+
+        <div class="footer">
+            <div style="margin-bottom: 20px;">
+                <a href="https://t.me/Godis1256" style="color:white; margin:15px; font-size:20px;"><i class="fab fa-telegram"></i></a>
+                <a href="https://www.tiktok.com/@musicstudio438" style="color:white; margin:15px; font-size:20px;"><i class="fab fa-tiktok"></i></a>
+                <a href="https://goo.gl/maps/example" style="color:white; margin:15px; font-size:20px;"><i class="fas fa-map-marker-alt"></i></a>
+            </div>
+            <p>💵 Telebirr: 0986980130 | 🏛️ Abyssinia: 153682704</p>
+            <p style="font-size: 10px;">የዌብሳይቱ ዲዛይነር፡ ዳንኤል ሙሉጌታ (ICT)</p>
+        </div>
 
         <script>
-            function toggleMode() {{ document.body.classList.toggle('dark-mode'); }}
+            function hideLoader() {{ document.getElementById('loader').style.display = 'none'; }}
+            
             function updateClock() {{
                 const now = new Date();
                 document.getElementById('clock').innerText = now.toLocaleTimeString();
+                document.getElementById('date').innerText = now.toDateString();
+                
+                // 6. Auto Night Mode (ከምሽቱ 12 ሰዓት በኋላ)
+                if(now.getHours() >= 18 || now.getHours() <= 6) {{
+                    document.body.style.background = "#121212";
+                    document.body.style.color = "white";
+                }}
             }}
             setInterval(updateClock, 1000);
-            function fireConfetti() {{
-                confetti({{ particleCount: 150, spread: 70, origin: {{ y: 0.6 }} }});
-                alert("ተመዝግበዋል! በቅርቡ እናገኝዎታለን::");
+
+            function calcPrice() {{
+                let nights = document.getElementById('nights').value;
+                document.getElementById('totalPrice').innerText = nights * 2500;
+            }}
+
+            function shareSite() {{
+                if (navigator.share) {{
+                    navigator.share({{ title: "Daniel Hotel", url: window.location.href }});
+                }} else {{ alert("ሊንኩን ኮፒ አድርገው ይላኩ!"); }}
             }}
         </script>
     </body>
     </html>
     """
 
-@app.route('/')
-def home():
-    content = f"""
-    <div style='padding: 40px 20px;'>
-        <img src='{my_photo}' style='width: 150px; height: 150px; border-radius: 50%; border: 5px solid #ffcc00; box-shadow: 0 0 20px rgba(255,204,0,0.4);'>
-        <h1>Daniel's Grand Hotel</h1>
-        <div class="stars">★★★★★</div>
-        <p>እንኳን ወደ ኢትዮጵያ ምርጡ ሆቴል በሰላም መጡ::</p>
-        
-        <div class="card">
-            <img src="{hotel_view}" style="width:100%; border-radius:15px; margin-bottom:15px;">
-            <h3>የተሟላ አገልግሎት</h3>
-            <p>ምቹ ክፍሎች፣ ጣፋጭ ምግቦች እና ፈጣን ኢንተርኔት በሆቴላችን ያገኛሉ::</p>
-            <button class="btn" onclick="location.href='/register'">አሁኑኑ ቦታ ይያዙ</button>
-        </div>
-    </div>
-    """
-    return layout(content)
-
-@app.route('/register')
-def register():
-    content = """
-    <div class='card'>
-        <h2>የእንግዳ ምዝገባ ቅጽ</h2>
-        <p>መረጃዎን ሲልኩ አስደሳች ስጦታ ይጠብቅዎታል!</p>
-        <div style="text-align:left; padding:10px;">
-            <label>ሙሉ ስም</label>
-            <input type='text' style='width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ccc;'>
-            <label>ስልክ ቁጥር</label>
-            <input type='tel' style='width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ccc;'>
-        </div>
-        <button class='btn' onclick='fireConfetti()'>መረጃውን ላክ (Submit)</button>
-    </div>
-    """
-    return layout(content, "Register")
-
-@app.route('/rooms')
-def rooms():
-    content = f"""
-    <div class='card' style='padding:0; overflow:hidden;'>
-        <img src='{room1}' style='width:100%;'>
-        <div style='padding:20px;'>
-            <h3>የቪአይፒ ክፍል (VIP Room)</h3>
-            <p>ዋጋ በሌሊት: 5,000 ብር</p>
-            <button class='btn' onclick="location.href='/register'">አሁን እዘዝ</button>
-        </div>
-    </div>
-    """
-    return layout(content, "Rooms")
-
-@app.route('/gallery')
-def gallery():
-    return layout("<h2>Gallery - በቅርቡ አዳዲስ ፎቶዎች ይገባሉ!</h2>")
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-    
