@@ -6,60 +6,65 @@ app = Flask(__name__)
 my_photo = "https://github.com/mulugetadaniel74-design/my_website/blob/main/IMG_20250316_160655_800.jpg?raw=true"
 room1 = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"
 
-def layout(content, title="Daniel's Hotel"):
+def layout(content, title="Daniel's Grand Hotel"):
     return f"""
     <!DOCTYPE html>
     <html lang="am">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            body {{ margin:0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; color: #333; }}
-            .header {{ background: #004d40; color: white; padding: 15px; position: sticky; top: 0; z-index: 1000; }}
+            :root {{ --bg: #f0f2f5; --text: #333; --card: white; --header: #004d40; }}
+            .dark-mode {{ --bg: #1a1a1a; --text: #f0f0f0; --card: #2d2d2d; --header: #002d26; }}
+            
+            body {{ margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; transition: 0.5s; }}
+            .header {{ background: var(--header); color: white; padding: 15px; position: sticky; top: 0; z-index: 1000; }}
             nav a {{ color:white; margin:0 7px; text-decoration:none; font-weight:bold; font-size: 12px; }}
-            .card {{ background:white; max-width:600px; margin: 20px auto; border-radius:15px; padding: 20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }}
-            .btn {{ background:#ffcc00; color:black; padding:12px 25px; text-decoration:none; border-radius:25px; font-weight:bold; display: inline-block; }}
-            .call-btn {{ background: #28a745; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; position: fixed; bottom: 20px; right: 20px; z-index: 1001; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }}
+            .card {{ background: var(--card); max-width:600px; margin: 20px auto; border-radius:15px; padding: 20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }}
+            .btn {{ background:#ffcc00; color:black; padding:12px 25px; text-decoration:none; border-radius:25px; font-weight:bold; display: inline-block; cursor:pointer; border:none; }}
+            .call-btn {{ background: #28a745; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; position: fixed; bottom: 20px; left: 20px; z-index: 1001; }}
+            .mode-toggle {{ background: #444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; }}
             footer {{ background: #263238; color: white; padding: 30px; margin-top: 40px; }}
-            .marquee {{ background: #ffcc00; color: #000; font-weight: bold; padding: 5px; font-size: 14px; }}
-            .payment-box {{ background: #ffffff; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: left; color: #333; }}
-            .telebirr {{ border-left: 5px solid #00adef; margin-bottom: 10px; padding-left: 10px; }}
-            .abyssinia {{ border-left: 5px solid #1976d2; padding-left: 10px; }}
+            .marquee {{ background: #ffcc00; color: #000; font-weight: bold; padding: 5px; }}
         </style>
     </head>
     <body>
-        <div class="marquee"><marquee>ማስታወቂያ፦ ማንኛውንም አይነት ዌብሳይት በተመጣጣኝ ዋጋ ለማሰራት በ 0986980130 ይደውሉልን! (Daniel ICT)</marquee></div>
+        <div class="marquee"><marquee>ማስታወቂያ፦ ለማንኛውም ዌብሳይት ስራ በ 0986980130 ይደውሉልን! (Daniel ICT)</marquee></div>
         <div class="header">
-            <h2 style='margin:0;'>🏨 {title}</h2>
-            <nav style='margin-top:10px;'>
-                <a href='/'>HOME</a> | <a href='/rooms'>ROOMS</a> | <a href='/gallery'>GALLERY</a> | <a href='/register' style='color:#ffcc00;'>REGISTER</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+                <button class="mode-toggle" onclick="toggleMode()">🌓 Mode</button>
+                <div id="clock" style="font-size: 12px; font-weight: bold;"></div>
+            </div>
+            <h2 style='margin:10px 0;'>🏨 {title}</h2>
+            <nav>
+                <a href='/'>HOME</a> | <a href='/rooms'>ROOMS</a> | <a href='/menu'>MENU</a> | <a href='/register' style='color:#ffcc00;'>REGISTER</a>
             </nav>
         </div>
         
-        <a href="tel:0986980130" class="call-btn">📞 ደውል (Call)</a>
+        <a href="tel:0986980130" class="call-btn" onclick="playClick()">📞 ደውል</a>
 
         {content}
         
         <footer>
-            <h3>የክፍያ አማራጮች (Payment Methods)</h3>
-            <div class="payment-box">
-                <div class="telebirr">
-                    <p><strong>📱 Telebirr (ቴሌብር)</strong></p>
-                    <p>ቁጥር: 0986980130</p>
-                </div>
-                <div class="abyssinia">
-                    <p><strong>🏦 የአቢሲኒያ ባንክ (Bank of Abyssinia)</strong></p>
-                    <p>ቁጥር: 153682704</p>
-                    <p>ስም: ዳንኤል ሙሉጌታ</p>
-                </div>
+            <h3>የክፍያ አማራጮች</h3>
+            <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:10px; text-align:left;">
+                <p>📱 <b>Telebirr:</b> 0986980130</p>
+                <p>🏦 <b>Abyssinia:</b> 153682704 (ዳንኤል ሙሉጌታ)</p>
             </div>
-            
-            <div style="margin-top:30px;">
-                <a href="https://wa.me/251986980130" style="color:#25D366; text-decoration:none; margin:10px; font-weight:bold;">WhatsApp</a>
-                <a href="https://t.me/Godis1256" style="color:#0088cc; text-decoration:none; margin:10px; font-weight:bold;">Telegram</a>
-                <a href="https://www.tiktok.com/@musicstudio438" style="color:#ff0050; text-decoration:none; margin:10px; font-weight:bold;">TikTok</a>
-            </div>
-            <p style="margin-top:20px; font-size: 11px; color: #999;">© 2026 Daniel Mulugeta ICT - Professional Developer</p>
+            <p style="margin-top:20px; font-size: 11px;">© 2026 Daniel Mulugeta ICT</p>
         </footer>
+
+        <script>
+            function toggleMode() {{ document.body.classList.toggle('dark-mode'); }}
+            function updateClock() {{
+                const now = new Date();
+                document.getElementById('clock').innerText = now.toLocaleTimeString();
+            }}
+            setInterval(updateClock, 1000);
+            function playClick() {{
+                let audio = new Audio('https://www.soundjay.com/buttons/button-16.mp3');
+                audio.play();
+            }}
+        </script>
     </body>
     </html>
     """
@@ -68,41 +73,31 @@ def layout(content, title="Daniel's Hotel"):
 def home():
     content = f"""
     <div style='padding: 40px 20px;'>
-        <img src='{my_photo}' style='width: 140px; height: 140px; border-radius: 50%; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);'>
+        <img src='{my_photo}' style='width: 140px; height: 140px; border-radius: 50%; border: 4px solid white;'>
         <h1>Daniel's Grand Hotel</h1>
-        <p>እንኳን ወደ ሆቴላችን በሰላም መጡ!</p>
+        <p>በኢትዮጵያ ቀዳሚው ዘመናዊ መስተንግዶ!</p>
         <div class="card">
-            <h3>ልዩ መረጃ</h3>
-            <p>አሁን ዌብሳይታችን ላይ በቀጥታ የክፍያ መረጃዎችን ማግኘት ይችላሉ::</p>
-            <a href='/register' class="btn">አሁኑኑ ቦታ ይያዙ</a>
+            <h3>እንኳን ደህና መጡ</h3>
+            <p>የእኛን ዌብሳይት ስለጎበኙ እናመሰግናለን::</p>
+            <button class="btn" onclick="location.href='/register'; playClick()">ቦታ ይያዙ</button>
         </div>
     </div>
     """
     return layout(content)
 
+@app.route('/menu')
+def menu():
+    content = """<div class='card'><h2>የምግብ ዝርዝር</h2><p>ክትፎ ..... 500 ብር</p><p>ጥብስ ..... 400 ብር</p></div>"""
+    return layout(content, "Hotel Menu")
+
 @app.route('/rooms')
 def rooms():
-    content = f"""<div style='padding:20px;'><h2>አሪፍ ክፍሎቻችን</h2><div class="card" style="padding:0;"><img src='{room1}' style='width:100%;'><div style='padding:20px;'><h3>VIP Suite</h3><p>$200 / Night</p><a href='/register' class="btn">BOOK NOW</a></div></div></div>"""
-    return layout(content, "Hotel Rooms")
-
-@app.route('/gallery')
-def gallery():
-    return layout("<h2>Gallery Page - በቅርቡ ይጠብቁ!</h2>")
+    content = f"""<div class='card' style='padding:0;'><img src='{room1}' style='width:100%;'><h3>VIP Suite</h3><p>$200 / Night</p></div>"""
+    return layout(content, "Rooms")
 
 @app.route('/register')
 def register():
-    content = """
-    <div style='padding: 20px;'>
-        <div class="card">
-            <h2>የእንግዳ ምዝገባ</h2>
-            <form action="https://formspree.io/f/xlgwjnee" method="POST">
-                <input type='text' name='name' placeholder="ሙሉ ስም" style='width:90%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;' required>
-                <input type='tel' name='phone' placeholder="ስልክ ቁጥር" style='width:90%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;' required>
-                <button type='submit' class="btn" style='width:90%; border:none; cursor:pointer;'>መረጃውን ላክ</button>
-            </form>
-        </div>
-    </div>
-    """
+    content = """<div class='card'><h2>ምዝገባ</h2><form><input type='text' placeholder='ስም' style='width:80%; padding:10px;'><br><br><button class='btn'>ላክ</button></form></div>"""
     return layout(content, "Register")
 
 if __name__ == "__main__":
